@@ -8,8 +8,8 @@ import java.util.Map;
 public class Student extends User{
 
     private int currentSemester;
-    private List<Course> registeredCourses; // list of registered courses
-    private Map<Course, String> completedCourses; // Course -> Grade
+    private List<Course> registeredCourses; 
+    private Map<Course, String> completedCourses; 
     private List<Complaint> complaints;
 
     public Student(String email, String password, String name) {
@@ -23,7 +23,6 @@ public class Student extends User{
     public int getCurrentSemester() { 
         return currentSemester; 
     }
-
     public void setCurrentSemester(int semester) { 
         this.currentSemester = semester; 
     }
@@ -58,6 +57,21 @@ public class Student extends User{
 
     public void addComplaint(Complaint complaint) {
         complaints.add(complaint);
+    }
+
+    public int getTotalCredits() {
+        return registeredCourses.stream().mapToInt(Course::getCredits).sum();
+    }
+    
+    public boolean hasCompletedPrerequisites(Course course) {
+
+        for (String prereq : course.getPrerequisites()) {
+
+            boolean completed = completedCourses.keySet().stream()
+                .anyMatch(c -> c.getCourseCode().equals(prereq));
+            if (!completed) return false;
+        }
+        return true;
     }
 
     @Override
