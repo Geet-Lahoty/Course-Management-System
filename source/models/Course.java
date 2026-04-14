@@ -55,6 +55,10 @@ public class Course implements Serializable{
         this.credits = credits; 
     }
 
+    public int getSemester() {
+        return semester;
+    }
+
     public List<String> getPrerequisites() { 
         return prerequisites; 
     }
@@ -74,6 +78,10 @@ public class Course implements Serializable{
     }
     public void setLocation(String location) { 
         this.location = location; 
+    }
+
+    public List<Student> getEnrolledStudents() {
+        return enrolledStudents;
     }
 
     public int getEnrollmentLimit() { 
@@ -107,4 +115,5 @@ public class Course implements Serializable{
             courseCode, title, credits, semester,
             professor != null ? professor.getName() : "Not Assigned");
     }
+
 }
