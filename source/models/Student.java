@@ -76,15 +76,17 @@ public class Student extends User{
 
     @Override
     public void displayMenu() {
-        System.out.println("\n=== STUDENT MENU ===");
-        System.out.println("1. View Available Courses");
-        System.out.println("2. Register for Courses");
-        System.out.println("3. View Schedule");
-        System.out.println("4. Track Academic Progress");
-        System.out.println("5. Drop Course");
-        System.out.println("6. Submit Complaint");
-        System.out.println("7. View Complaint Status");
-        System.out.println("8. Logout");
+
+        System.out.println("\n+------- STUDENT  MENU -------+");
+        System.out.println("| 1. View Available Courses   |");
+        System.out.println("| 2. Register for Courses     |");
+        System.out.println("| 3. View Schedule            |");
+        System.out.println("| 4. Track Academic Progress  |");
+        System.out.println("| 5. Drop Course              |");
+        System.out.println("| 6. Submit Complaint         |");
+        System.out.println("| 7. View Complaint Status    |");
+        System.out.println("| 8. Logout                   |");
+        System.out.println("+-----------------------------+");
         System.out.print("Choose option: ");
     }
 }

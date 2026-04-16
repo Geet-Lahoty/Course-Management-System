@@ -44,13 +44,14 @@ public class Professor extends User{
 
     @Override
     public void displayMenu() {
-        System.out.println("\n=== PROFESSOR MENU ===");
-        System.out.println("1. View Assigned Courses");
-        System.out.println("2. Update Course Details");
-        System.out.println("3. View Enrolled Students");
-        System.out.println("4. Assign Grades");
-        System.out.println("5. Update Office Hours");
-        System.out.println("6. Logout");
+        System.out.println("\n+------ PROFESSOR  MENU------+");
+        System.out.println("| 1. View Assigned Courses   |");
+        System.out.println("| 2. Update Course Details   |");
+        System.out.println("| 3. View Enrolled Students  |");
+        System.out.println("| 4. Assign Grades           |");
+        System.out.println("| 5. Update Office Hours     |");
+        System.out.println("| 6. Logout                  |");
+        System.out.println("+----------------------------+");
         System.out.print("Choose option: ");
     }
 }

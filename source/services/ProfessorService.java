@@ -19,7 +19,7 @@ public class ProfessorService {
     
     public void viewAssignedCourses(Professor professor) {
 
-        System.out.println("\n=== ASSIGNED COURSES ===");
+        System.out.println("\n    ASSIGNED COURSES ");
         
         if (professor.getAssignedCourses().isEmpty()) {
             System.out.println("No courses assigned.");
@@ -36,7 +36,7 @@ public class ProfessorService {
     
     public void updateCourseDetails(Professor professor) {
 
-        System.out.println("\n=== UPDATE COURSE DETAILS ===");
+        System.out.println("\n    UPDATE COURSE DETAILS ");
         
         if (professor.getAssignedCourses().isEmpty()) {
             System.out.println("No courses assigned to update.");
@@ -108,7 +108,7 @@ public class ProfessorService {
     
     public void viewEnrolledStudents(Professor professor) {
 
-        System.out.println("\n=== ENROLLED STUDENTS ===");
+        System.out.println("\n    ENROLLED STUDENTS ");
         
         if (professor.getAssignedCourses().isEmpty()) {
             System.out.println("No courses assigned.");
@@ -147,7 +147,7 @@ public class ProfessorService {
     
     public void assignGrades(Professor professor) {
 
-        System.out.println("\n=== ASSIGN GRADES ===");
+        System.out.println("\n    ASSIGN GRADES ");
         
         if (professor.getAssignedCourses().isEmpty()) {
 

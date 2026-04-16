@@ -23,7 +23,7 @@ public class AdminService {
     
     public void manageCourseCatalog() {
 
-        System.out.println("\n=== MANAGE COURSE CATALOG ===");
+        System.out.println("\n    MANAGE COURSE CATALOG ");
         System.out.println("1. View All Courses");
         System.out.println("2. Add New Course");
         System.out.println("3. Delete Course");
@@ -48,7 +48,7 @@ public class AdminService {
     
     private void viewAllCourses() {
 
-        System.out.println("\n=== ALL COURSES ===");
+        System.out.println("\n    ALL COURSES ");
 
         for (Course course : dataStorage.getCourses()) {
             System.out.println("\n" + course);
@@ -57,7 +57,7 @@ public class AdminService {
     
     private void addNewCourse() {
 
-        System.out.println("\n=== ADD NEW COURSE ===");
+        System.out.println("\n    ADD NEW COURSE ");
         
         System.out.print("Course Code: ");
         String code = scanner.nextLine();
@@ -80,7 +80,7 @@ public class AdminService {
     
     private void deleteCourse() {
 
-        System.out.println("\n=== DELETE COURSE ===");
+        System.out.println("\n    DELETE COURSE ");
         
         if (dataStorage.getCourses().isEmpty()) {
             System.out.println("No courses available.");
@@ -106,7 +106,7 @@ public class AdminService {
     
     public void manageStudentRecords() {
 
-        System.out.println("\n=== MANAGE STUDENT RECORDS ===");
+        System.out.println("\n    MANAGE STUDENT RECORDS ");
         
         List<User> students = dataStorage.getUsers().stream()
             .filter(u -> u instanceof Student)
@@ -163,7 +163,7 @@ public class AdminService {
     
     public void assignProfessorsToCourses() {
 
-        System.out.println("\n=== ASSIGN PROFESSORS TO COURSES ===");
+        System.out.println("\n    ASSIGN PROFESSORS TO COURSES ");
         
         List<User> professors = dataStorage.getUsers().stream()
             .filter(u -> u instanceof Professor)
@@ -214,7 +214,7 @@ public class AdminService {
     
     public void handleComplaints() {
 
-        System.out.println("\n=== HANDLE COMPLAINTS ===");
+        System.out.println("\n    HANDLE COMPLAINTS ");
         
         if (dataStorage.getComplaints().isEmpty()) {
             System.out.println("No complaints found.");

@@ -21,7 +21,7 @@ public class StudentService {
     }
     
     public void viewAvailableCourses(Student student) {
-        System.out.println("\n=== AVAILABLE COURSES FOR SEMESTER " + student.getCurrentSemester() + " ===");
+        System.out.println("\n   AVAILABLE COURSES FOR SEMESTER " + student.getCurrentSemester());
         
         List<Course> availableCourses = dataStorage.getCourses().stream()
             .filter(c -> c.getSemester() == student.getCurrentSemester())
@@ -44,7 +44,7 @@ public class StudentService {
     }
     
     public void registerForCourse(Student student) {
-        System.out.println("\n=== REGISTER FOR COURSES ===");
+        System.out.println("\n    REGISTER FOR COURSES");
         
         List<Course> availableCourses = dataStorage.getCourses().stream()
             .filter(c -> c.getSemester() == student.getCurrentSemester())
@@ -69,12 +69,6 @@ public class StudentService {
         if (choice > 0 && choice <= availableCourses.size()) {
             Course selectedCourse = availableCourses.get(choice - 1);
             
-            // Check credit limit
-            if (student.getTotalCredits() + selectedCourse.getCredits() > 20) {
-                System.out.println("Cannot register. Credit limit exceeded (max 20 credits).");
-                return;
-            }
-            
             // Check prerequisites
             if (!student.hasCompletedPrerequisites(selectedCourse)) {
                 System.out.println("Cannot register. Prerequisites not met.");
@@ -95,7 +89,7 @@ public class StudentService {
     }
     
     public void viewSchedule(Student student) {
-        System.out.println("\n=== WEEKLY SCHEDULE ===");
+        System.out.println("\n    WEEKLY SCHEDULE");
         
         if (student.getRegisteredCourses().isEmpty()) {
             System.out.println("No registered courses.");
@@ -112,7 +106,7 @@ public class StudentService {
     }
     
     public void trackAcademicProgress(Student student) {
-        System.out.println("\n=== ACADEMIC PROGRESS ===");
+        System.out.println("\n    ACADEMIC PROGRESS ");
         
         if (student.getCompletedCourses().isEmpty()) {
             System.out.println("No completed courses yet.");
@@ -132,7 +126,7 @@ public class StudentService {
     }
     
     public void dropCourse(Student student) {
-        System.out.println("\n=== DROP COURSE ===");
+        System.out.println("\n    DROP COURSE ");
         
         if (student.getRegisteredCourses().isEmpty()) {
             System.out.println("No registered courses to drop.");
@@ -159,7 +153,7 @@ public class StudentService {
     }
     
     public void submitComplaint(Student student) {
-        System.out.println("\n=== SUBMIT COMPLAINT ===");
+        System.out.println("\n    SUBMIT COMPLAINT ");
         System.out.print("Enter complaint description: ");
         String description = scanner.nextLine();
         
@@ -171,7 +165,7 @@ public class StudentService {
     }
     
     public void viewComplaintStatus(Student student) {
-        System.out.println("\n=== COMPLAINT STATUS ===");
+        System.out.println("\n    COMPLAINT STATUS ");
         
         if (student.getComplaints().isEmpty()) {
             System.out.println("No complaints submitted.");
