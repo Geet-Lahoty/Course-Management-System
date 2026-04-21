@@ -85,7 +85,8 @@ public class Student extends User{
         System.out.println("| 5. Drop Course              |");
         System.out.println("| 6. Submit Complaint         |");
         System.out.println("| 7. View Complaint Status    |");
-        System.out.println("| 8. Logout                   |");
+        System.out.println("| 8. Give Feedback            |");
+        System.out.println("| 9. Logout                   |");
         System.out.println("+-----------------------------+");
         System.out.print("Choose option: ");
     }

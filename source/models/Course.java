@@ -98,10 +98,11 @@ public class Course implements Serializable{
         this.syllabus = syllabus; 
     }
 
-    public void enrollStudent(Student student) {
-
+    public void enrollStudent(Student student) throws source.utils.CourseFullException {
         if (enrolledStudents.size() < enrollmentLimit) {
             enrolledStudents.add(student);
+        } else {
+            throw new source.utils.CourseFullException("Cannot enroll: Course " + courseCode + " is already full.");
         }
     }
 

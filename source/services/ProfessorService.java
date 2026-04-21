@@ -6,6 +6,7 @@ import source.models.Course;
 import source.models.Grade;
 import source.models.Professor;
 import source.models.Student;
+import source.models.Feedback;
 
 public class ProfessorService {
 
@@ -187,6 +188,37 @@ public class ProfessorService {
             
             dataStorage.saveData();
             System.out.println("Grades assigned successfully.");
+        }
+    }
+
+    public void viewFeedback(Professor professor) {
+        System.out.println("\n    COURSE FEEDBACK");
+        if (professor.getAssignedCourses().isEmpty()) {
+            System.out.println("No courses assigned.");
+            return;
+        }
+
+        System.out.println("Select course to view feedback:");
+        for (int i = 0; i < professor.getAssignedCourses().size(); i++) {
+            System.out.println((i + 1) + ". " + professor.getAssignedCourses().get(i).getCourseCode());
+        }
+
+        System.out.print("Choice: ");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        if (choice > 0 && choice <= professor.getAssignedCourses().size()) {
+            Course course = professor.getAssignedCourses().get(choice - 1);
+            boolean hasFeedback = false;
+            for (Feedback<?> feedback : dataStorage.getFeedbacks()) {
+                if (feedback.getCourse().getCourseCode().equals(course.getCourseCode())) {
+                    System.out.println(feedback);
+                    hasFeedback = true;
+                }
+            }
+            if (!hasFeedback) {
+                System.out.println("No feedback available for this course.");
+            }
         }
     }
 }

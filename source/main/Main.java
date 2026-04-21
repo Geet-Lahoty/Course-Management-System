@@ -54,7 +54,17 @@ public class Main {
         scanner.nextLine();
         
         if (choice == 1) {
-            login();
+            try {
+                login();
+            } 
+            catch (source.utils.InvalidLoginException e) {
+
+                System.out.println(e.getMessage());
+                System.out.println("\nWould you like to sign up? (y/n)");
+                if (scanner.nextLine().equalsIgnoreCase("y")) {
+                    signup(1);
+                }
+            }
         } 
         else if (choice == 2) {
             System.out.println("Thank you for using the system. Goodbye!");
@@ -62,7 +72,7 @@ public class Main {
         }
     }
     
-    private static void login() {
+    private static void login() throws source.utils.InvalidLoginException {
 
         System.out.println("\n+----   LOGIN   ----+");
         System.out.println("| Login as:         |");
@@ -82,7 +92,6 @@ public class Main {
         String password = scanner.nextLine();
         
         String role = switch(roleChoice) {
-
             case 1 -> "STUDENT";
             case 2 -> "PROFESSOR";
             case 3 -> "ADMINISTRATOR";
@@ -93,15 +102,18 @@ public class Main {
 
             User user = dataStorage.findUserByEmail(email);
             
-            if (user != null && user.getPassword().equals(password) && user.getRole().equals(role)) {
-                currentUser = user;
-                System.out.println("\nWelcome, " + currentUser.getName() + "!");
+            if (user != null && user.getPassword().equals(password)) {
+
+                if (user.getRole().equals(role) || (role.equals("STUDENT") && user.getRole().equals("TA"))) {
+                    currentUser = user;
+                    System.out.println("\nWelcome, " + currentUser.getName() + "!");
+                } 
+                else {
+                    throw new source.utils.InvalidLoginException("Role mismatch for user.");
+                }
             } 
             else {
-                System.out.println("\nInvalid credentials. Would you like to sign up? (y/n)");
-                if (scanner.nextLine().equalsIgnoreCase("y")) {
-                    signup(roleChoice);
-                }
+                throw new source.utils.InvalidLoginException("\nInvalid credentials.");
             }
         } 
         else if (roleChoice == 3) {
@@ -112,7 +124,7 @@ public class Main {
                 currentUser = user;
                 System.out.println("\nWelcome, Administrator " + currentUser.getName() + "!");
             } else {
-                System.out.println("\nInvalid administrator credentials.");
+                throw new source.utils.InvalidLoginException("\nInvalid administrator credentials.");
             }
         }
     }
@@ -173,18 +185,46 @@ public class Main {
     private static void handleStudentSession(Student student, int choice) {
 
         switch(choice) {
-
             case 1 -> studentService.viewAvailableCourses(student);
-            case 2 -> studentService.registerForCourse(student);
+            case 2 -> {
+                try {
+                    studentService.registerForCourse(student);
+                } catch (source.utils.CourseFullException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
             case 3 -> studentService.viewSchedule(student);
             case 4 -> studentService.trackAcademicProgress(student);
-            case 5 -> studentService.dropCourse(student);
+            case 5 -> {
+                try {
+                    studentService.dropCourse(student);
+                } catch (source.utils.DropDeadlinePassedException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
             case 6 -> studentService.submitComplaint(student);
             case 7 -> studentService.viewComplaintStatus(student);
-            case 8 -> {
-                currentUser = null;
-                dataStorage.saveData();
-                System.out.println("Logged out successfully.");
+            case 8 -> studentService.giveFeedback(student);
+            case 9 -> {
+                if (student instanceof source.models.TeachingAssistant) {
+                    studentService.viewEnrolledStudentsTA((source.models.TeachingAssistant)student);
+                } else {
+                    currentUser = null;
+                    dataStorage.saveData();
+                    System.out.println("Logged out successfully.");
+                }
+            }
+            case 10 -> {
+                if (student instanceof source.models.TeachingAssistant) {
+                    studentService.assignGradesTA((source.models.TeachingAssistant)student);
+                }
+            }
+            case 11 -> {
+                if (student instanceof source.models.TeachingAssistant) {
+                    currentUser = null;
+                    dataStorage.saveData();
+                    System.out.println("Logged out successfully.");
+                }
             }
         }
     }
@@ -203,7 +243,8 @@ public class Main {
                 dataStorage.saveData();
                 System.out.println("Office hours updated.");
             }
-            case 6 -> {
+            case 6 -> professorService.viewFeedback(professor);
+            case 7 -> {
                 currentUser = null;
                 dataStorage.saveData();
                 System.out.println("Logged out successfully.");

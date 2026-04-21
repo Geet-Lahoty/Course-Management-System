@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import source.models.Complaint;
 import source.models.Course;
+import source.models.TeachingAssistant;
+import source.models.Feedback;
 import source.models.Student;
 import source.utils.GPAcalculator;
 
@@ -21,6 +23,7 @@ public class StudentService {
     }
     
     public void viewAvailableCourses(Student student) {
+
         System.out.println("\n   AVAILABLE COURSES FOR SEMESTER " + student.getCurrentSemester());
         
         List<Course> availableCourses = dataStorage.getCourses().stream()
@@ -43,7 +46,8 @@ public class StudentService {
         }
     }
     
-    public void registerForCourse(Student student) {
+    public void registerForCourse(Student student) throws source.utils.CourseFullException {
+
         System.out.println("\n    REGISTER FOR COURSES");
         
         List<Course> availableCourses = dataStorage.getCourses().stream()
@@ -68,17 +72,14 @@ public class StudentService {
         
         if (choice > 0 && choice <= availableCourses.size()) {
             Course selectedCourse = availableCourses.get(choice - 1);
-            
-            // Check prerequisites
+
             if (!student.hasCompletedPrerequisites(selectedCourse)) {
                 System.out.println("Cannot register. Prerequisites not met.");
                 return;
             }
-            
-            // Check enrollment limit
+
             if (selectedCourse.getEnrolledStudents().size() >= selectedCourse.getEnrollmentLimit()) {
-                System.out.println("Cannot register. Course is full.");
-                return;
+                throw new source.utils.CourseFullException("Cannot register. Course is full.");
             }
             
             student.registerCourse(selectedCourse);
@@ -89,6 +90,7 @@ public class StudentService {
     }
     
     public void viewSchedule(Student student) {
+
         System.out.println("\n    WEEKLY SCHEDULE");
         
         if (student.getRegisteredCourses().isEmpty()) {
@@ -106,6 +108,7 @@ public class StudentService {
     }
     
     public void trackAcademicProgress(Student student) {
+
         System.out.println("\n    ACADEMIC PROGRESS ");
         
         if (student.getCompletedCourses().isEmpty()) {
@@ -125,8 +128,14 @@ public class StudentService {
         System.out.printf("CGPA: %.2f\n", cgpa);
     }
     
-    public void dropCourse(Student student) {
+    public void dropCourse(Student student) throws source.utils.DropDeadlinePassedException {
+
         System.out.println("\n    DROP COURSE ");
+        
+        System.out.print("Has the drop deadline passed? (y/n): ");
+        if (scanner.nextLine().equalsIgnoreCase("y")) {
+            throw new source.utils.DropDeadlinePassedException("Deadline passed! You cannot drop courses anymore.");
+        }
         
         if (student.getRegisteredCourses().isEmpty()) {
             System.out.println("No registered courses to drop.");
@@ -153,6 +162,7 @@ public class StudentService {
     }
     
     public void submitComplaint(Student student) {
+
         System.out.println("\n    SUBMIT COMPLAINT ");
         System.out.print("Enter complaint description: ");
         String description = scanner.nextLine();
@@ -165,6 +175,7 @@ public class StudentService {
     }
     
     public void viewComplaintStatus(Student student) {
+        
         System.out.println("\n    COMPLAINT STATUS ");
         
         if (student.getComplaints().isEmpty()) {
@@ -174,6 +185,102 @@ public class StudentService {
         
         for (Complaint complaint : student.getComplaints()) {
             System.out.println("\n" + complaint);
+        }
+    }
+
+    public void giveFeedback(Student student) {
+        System.out.println("\n    GIVE FEEDBACK ");
+        if (student.getCompletedCourses().isEmpty()) {
+            System.out.println("No completed courses to give feedback for.");
+            return;
+        }
+
+        System.out.println("Completed courses:");
+        List<Course> comps = new java.util.ArrayList<>(student.getCompletedCourses().keySet());
+        for (int i = 0; i < comps.size(); i++) {
+            System.out.println((i + 1) + ". " + comps.get(i).getCourseCode() + " - " + comps.get(i).getTitle());
+        }
+
+        System.out.print("Select course number: ");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        if (choice > 0 && choice <= comps.size()) {
+            Course course = comps.get(choice - 1);
+            System.out.println("Select feedback type: 1. Numeric Rating (1-5)  2. Textual Comment");
+            int type = scanner.nextInt();
+            scanner.nextLine();
+            
+            if (type == 1) {
+                System.out.print("Enter rating (1-5): ");
+                Integer rating = scanner.nextInt();
+                scanner.nextLine();
+                Feedback<Integer> feedback = new Feedback<>(student, course, rating);
+                dataStorage.addFeedback(feedback);
+                System.out.println("Feedback submitted!");
+            } else if (type == 2) {
+                System.out.print("Enter comment: ");
+                String comment = scanner.nextLine();
+                Feedback<String> feedback = new Feedback<>(student, course, comment);
+                dataStorage.addFeedback(feedback);
+                System.out.println("Feedback submitted!");
+            }
+        }
+    }
+
+    public void viewEnrolledStudentsTA(TeachingAssistant ta) {
+        System.out.println("\n    ENROLLED STUDENTS (TA) ");
+        if (ta.getAssistantCourses().isEmpty()) {
+            System.out.println("No courses assigned as TA.");
+            return;
+        }
+
+        System.out.println("Select course:");
+        for (int i = 0; i < ta.getAssistantCourses().size(); i++) {
+            System.out.println((i + 1) + ". " + ta.getAssistantCourses().get(i).getCourseCode());
+        }
+
+        System.out.print("Choice: ");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        if (choice > 0 && choice <= ta.getAssistantCourses().size()) {
+            Course course = ta.getAssistantCourses().get(choice - 1);
+            for (Student student : course.getEnrolledStudents()) {
+                System.out.println("\nName: " + student.getName());
+                System.out.println("Email: " + student.getEmail());
+            }
+        }
+    }
+
+    public void assignGradesTA(TeachingAssistant ta) {
+        System.out.println("\n    ASSIGN GRADES (TA) ");
+        if (ta.getAssistantCourses().isEmpty()) {
+            System.out.println("No courses assigned as TA.");
+            return;
+        }
+
+        System.out.println("Select course:");
+        for (int i = 0; i < ta.getAssistantCourses().size(); i++) {
+            System.out.println((i + 1) + ". " + ta.getAssistantCourses().get(i).getCourseCode());
+        }
+
+        System.out.print("Choice: ");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        if (choice > 0 && choice <= ta.getAssistantCourses().size()) {
+            Course course = ta.getAssistantCourses().get(choice - 1);
+            for (Student student : course.getEnrolledStudents()) {
+                System.out.println("\nStudent: " + student.getName());
+                System.out.print("Enter grade: ");
+                String grade = scanner.nextLine();
+                source.models.Grade gradeObj = new source.models.Grade(student, course, grade);
+                dataStorage.addGrade(gradeObj);
+                student.completeCourse(course, grade);
+            }
+            dataStorage.saveData();
+            System.out.println("Grades assigned by TA!");
         }
     }
 }

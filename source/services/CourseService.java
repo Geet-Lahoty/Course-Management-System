@@ -134,10 +134,14 @@ public class CourseService implements CourseManagable {
             }
             
             if (!course.getEnrolledStudents().contains(student)) {
-                course.enrollStudent(student);
-                student.registerCourse(course);
-                dataStorage.saveData();
-                System.out.println("Student enrolled successfully.");
+                try {
+                    course.enrollStudent(student);
+                    student.registerCourse(course);
+                    dataStorage.saveData();
+                    System.out.println("Student enrolled successfully.");
+                } catch (source.utils.CourseFullException e) {
+                    System.out.println(e.getMessage());
+                }
             } 
             else {
                 System.out.println("Student already enrolled in this course.");
